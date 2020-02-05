@@ -5,23 +5,21 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    //alignItems: 'center',
+    marginBottom: 10,
   },
   image: {
-    width: 400,
-    height: 400,
+    width: 200,
+    height: 100,
   },
   title: {
-    width: 20,
-    height: 20,
     fontSize: 21,
-    color: 'black'
+    fontWeight:'bold',
+    color: 'black',
   },
   date: {
-    width: 20,
-    height: 20,
     fontSize:15,
-    color: 'gray'
+    color: 'gray',
   }
 });
 
