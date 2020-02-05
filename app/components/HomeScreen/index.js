@@ -1,10 +1,35 @@
 import React, { Component } from 'react';
-import { View, FlatList, } from 'react-native';
+import { View, FlatList, ActivityIndicator, Text } from 'react-native';
 import styles from './styles';
-import {DUMMY_DATA} from './dummy_data';
 import Article from '../Article';
 
-class HomeScreen extends Component {
+export default class HomeScreen extends Component {
+    constructor(props){
+        super(props);
+        this.state = { 
+            isLoading: true,
+            error: null,
+            data: []
+        }
+    }
+    componentDidMount(){
+        fetch('https://api.myjson.com/bins/nl6jh/')
+          .then(response=> response.json())
+          .then(responseJson => {
+            this.setState({
+              isLoading: false,
+              data: responseJson.results,
+            });
+          })
+          .catch(error => {
+            console.error(error);
+            this.setState({
+                isLoading: false,
+                error: error,
+            })
+          });
+      }
+    
     renderSeparator = () => {
         return (
           <View
@@ -18,11 +43,22 @@ class HomeScreen extends Component {
         );
       };
     render(){
+        if(this.state.isLoading){
+            return(
+                <View style={{flex: 1, padding: 20}}>
+                  <ActivityIndicator/>
+                </View>
+            )
+        }
         const { navigate } = this.props.navigation;
         return (
+            this.state.error ?
+            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                <Text style={{color:'red'}}>Oops!!! An error occurred</Text>
+            </View> :
             <View style={styles.container}>
                 <FlatList
-                    data={DUMMY_DATA}
+                    data={this.state.data}
                     renderItem={ 
                         ({item}) => 
                         <Article
@@ -36,5 +72,4 @@ class HomeScreen extends Component {
         )
     }
 }
-export default HomeScreen;
 

@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   caption: {
-    fontSize: 15,
+    fontSize: 13,
     fontStyle:'italic',
     color: '#5a5a5a',
   },
