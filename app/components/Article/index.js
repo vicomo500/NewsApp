@@ -1,6 +1,8 @@
 import React from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
 import styles from './styles';
+import moment from 'moment';
+
 const Article = ( props ) => {
     const { data } = props
     return (
@@ -13,7 +15,7 @@ const Article = ( props ) => {
                              require('../../assets/placeholder.png')}/>
             <View style={{flex:1, justifyContent:'space-between', marginStart:4}}>
                 <Text style={styles.title}>{data.title}</Text>
-                <Text style={styles.date}>{data.published_date} | {data.section}</Text>
+                <Text style={styles.date}>{moment(data.published_date, "YYYY-MM-DDTHH:mm:ss+00:00").fromNow()} | {data.section}</Text>
             </View>
         </TouchableOpacity>
     )

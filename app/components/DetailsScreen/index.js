@@ -4,7 +4,8 @@ import moment from 'moment';
 import styles from './styles';
 
 const DetailsScreen = ( { navigation } ) => {
-    const date = moment.parseZone(navigation.getParam('published_date', null));
+    const dateStr = navigation.getParam('published_date', "");
+    const date = moment(dateStr, "YYYY-MM-DDTHH:mm:ss+00:00");
     const multimedia = navigation.getParam('multimedia', null)
     const imgComp = Array.isArray(multimedia) ? 
     <View style={{borderBottomWidth:1, borderBottomColor:'#CED0CE'}}>
@@ -20,7 +21,7 @@ const DetailsScreen = ( { navigation } ) => {
             <View style={styles.container}>
                 <Text style={styles.title}> {navigation.getParam('title', null)} </Text>
                 <View style={{flex:1, flexDirection:'row', flexWrap:'nowrap', justifyContent:'space-between', alignItems:'center'}}>
-                    <Text style={styles.caption}> {date.format('ddd MMM Do YYYY')} | {navigation.getParam('section', null)} </Text>
+                    <Text style={styles.caption}> {date.utc().format('ddd MMM Do YYYY')} | {navigation.getParam('section', null)} </Text>
                     <Text style={{fontSize:10}}>{navigation.getParam('byline', null)}</Text>
                 </View>
                 {imgComp}

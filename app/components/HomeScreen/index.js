@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
-import { View, FlatList, ActivityIndicator, Text } from 'react-native';
+import { View, FlatList, ActivityIndicator, Text, StatusBar, RefreshControl } from 'react-native';
 import styles from './styles';
 import Article from '../Article';
 
 export default class HomeScreen extends Component {
+  
+    static navigationOptions = ( {navigation} ) => {
+        const headerTitle = 'News App';
+        const headerTitleStyle = { color: 'red' };
+        return {headerTitle, headerTitleStyle}
+    }
     constructor(props){
         super(props);
         this.state = { 
@@ -12,23 +18,26 @@ export default class HomeScreen extends Component {
             data: []
         }
     }
+    loadData = () => {
+      fetch('https://api.myjson.com/bins/nl6jh/')
+      .then(response=> response.json())
+      .then(responseJson => {
+        this.setState({
+          isLoading: false,
+          data: responseJson.results,
+        });
+      })
+      .catch(error => {
+        console.error(error);
+        this.setState({
+            isLoading: false,
+            error: error,
+        })
+      });
+    }
     componentDidMount(){
-        fetch('https://api.myjson.com/bins/nl6jh/')
-          .then(response=> response.json())
-          .then(responseJson => {
-            this.setState({
-              isLoading: false,
-              data: responseJson.results,
-            });
-          })
-          .catch(error => {
-            console.error(error);
-            this.setState({
-                isLoading: false,
-                error: error,
-            })
-          });
-      }
+        this.loadData();
+    }
     
     renderSeparator = () => {
         return (
@@ -42,10 +51,11 @@ export default class HomeScreen extends Component {
           />
         );
       };
+
     render(){
         if(this.state.isLoading){
             return(
-                <View style={{flex: 1, padding: 20}}>
+                <View style={{flex: 1, padding: 20, justifyContent:'center', alignItems:'center'}}>
                   <ActivityIndicator/>
                 </View>
             )
@@ -57,7 +67,9 @@ export default class HomeScreen extends Component {
                 <Text style={{color:'red'}}>Oops!!! An error occurred</Text>
             </View> :
             <View style={styles.container}>
+            <StatusBar backgroundColor = 'black' />
                 <FlatList
+                    style={{marginTop:4}}
                     data={this.state.data}
                     renderItem={ 
                         ({item}) => 
@@ -67,6 +79,11 @@ export default class HomeScreen extends Component {
                     }
                     keyExtractor={ item => item.title}
                     ItemSeparatorComponent={this.renderSeparator}
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={this.state.isLoading}
+                        onRefresh={this.loadData()} />
+                    }
                 />
             </View>
         )
